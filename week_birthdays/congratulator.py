@@ -33,7 +33,8 @@ def get_birthdays_per_week(users: list[dict[str,datetime]]):
             else:
                 birthday_users[birthday_this_year.strftime("%A")].append(name)
     for name, users in birthday_users.items():
-        print(f"{name}: {users}")
+        result = ", ".join(users)
+        print(f"{name}: {result}")
 
 
 def is_valide(users: list[dict[str,datetime]]) -> bool:
@@ -75,7 +76,7 @@ if __name__ == "__main__":
         {'name': 'Мішель Трете', 'birthday': datetime(1971, 10, 10)},
         {'name': 'Емір Кустуріца', 'birthday': datetime(1954, 10, 11)},
         {'name': 'Генрік Ібсен', 'birthday': datetime(1828, 10, 12)},
-        {'name': 'Саша Барон Коен', 'birthday': datetime(1971, 10, 13)},
+        {'name': 'Саша Барон-Коен', 'birthday': datetime(1971, 10, 13)},
         {'name': 'Ушер', 'birthday': datetime(1978, 10, 14)},
         {'name': 'Сара Фергюсон', 'birthday': datetime(1959, 10, 15)},
         {'name': 'Оскар Уайльд', 'birthday': datetime(1854, 10, 16)},
