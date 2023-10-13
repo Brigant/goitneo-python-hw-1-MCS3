@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from collections import defaultdict
 
 
@@ -13,7 +13,6 @@ BIRTHDAY_KEY = 'birthday'
 
 def get_birthdays_per_week(users: list[dict[str,datetime]]):
     WEEK_LENGTH = 7
-    DAY_OFF = [5,6]
     birthday_users = defaultdict(list)
     today = datetime.today().date()
 
@@ -24,14 +23,18 @@ def get_birthdays_per_week(users: list[dict[str,datetime]]):
         name = user[NAME_KEY]
         birthday = user[BIRTHDAY_KEY].date() 
         birthday_this_year = birthday.replace(year=today.year)
+
         if birthday_this_year < today:
             birthday_this_year = birthday.replace(year=today.year+1)
+
         delta_days = (birthday_this_year - today).days
         if delta_days < WEEK_LENGTH:
-            if birthday_this_year.weekday() in DAY_OFF:
-                birthday_users['Monday'].append(name)
-            else:
-                birthday_users[birthday_this_year.strftime("%A")].append(name)
+            if birthday_this_year.weekday() ==  5:
+                birthday_this_year = birthday_this_year + timedelta(days=2)
+            elif birthday_this_year.weekday() == 6:
+                birthday_this_year = birthday_this_year + timedelta(days=1)
+            birthday_users[birthday_this_year.strftime("%A")].append(name)
+
     for name, users in birthday_users.items():
         result = ", ".join(users)
         print(f"{name}: {result}")
