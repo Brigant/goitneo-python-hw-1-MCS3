@@ -1,8 +1,10 @@
+"""Imports are needed as the home task demand"""
 from datetime import datetime, timedelta
 from collections import defaultdict
 
 
 class WrongDataFormat(Exception):
+    """Specify custom exception."""
     def __init__(self, message):
         super().__init__(message)
 
@@ -12,13 +14,16 @@ BIRTHDAY_KEY = 'birthday'
 
 
 def get_birthdays_per_week(users: list[dict[str,datetime]]):
-    WEEK_LENGTH = 7
+    """
+    The function returns the next birthdays for a week from since.
+    It grouping it by weekday. Days off are excluded for result.
+    """
+    week_length = 7
     birthday_users = defaultdict(list)
     today = datetime.today().date()
 
     if not is_valide(users):
         return
-    
     for user in users:
         name = user[NAME_KEY]
         birthday = user[BIRTHDAY_KEY].date() 
@@ -28,7 +33,7 @@ def get_birthdays_per_week(users: list[dict[str,datetime]]):
             birthday_this_year = birthday.replace(year=today.year+1)
 
         delta_days = (birthday_this_year - today).days
-        if delta_days < WEEK_LENGTH:
+        if delta_days < week_length:
             if birthday_this_year.weekday() ==  5:
                 birthday_this_year = birthday_this_year + timedelta(days=2)
             elif birthday_this_year.weekday() == 6:
@@ -41,20 +46,23 @@ def get_birthdays_per_week(users: list[dict[str,datetime]]):
 
 
 def is_valide(users: list[dict[str,datetime]]) -> bool:
+    """
+    Validation function. 
+    """
     if not isinstance(users, list):
         raise WrongDataFormat('data must match the format: list[dict[str,datetime]]')
-   
     for user in users:
         if not isinstance(user, dict):
             raise WrongDataFormat('Each user object shout be a dictionary')
         elif NAME_KEY not in user.keys() or BIRTHDAY_KEY not in user.keys():
             raise WrongDataFormat(f'Each user object muht have key: {NAME_KEY} and {BIRTHDAY_KEY}')
         elif not isinstance(user[NAME_KEY], str) or not isinstance(user[BIRTHDAY_KEY], datetime):
-            raise WrongDataFormat(f'Key {NAME_KEY} should be "str" and key {BIRTHDAY_KEY} should be "datetime"')
+            raise WrongDataFormat(
+                f'Key {NAME_KEY} should be "str" and key {BIRTHDAY_KEY} should be "datetime"'
+                )
     return True
-    
 
-    
+
 if __name__ == "__main__":
     example = [
         {'name': 'Кіану Рівз', 'birthday': datetime(1964, 9, 2)},
@@ -99,10 +107,7 @@ if __name__ == "__main__":
         {'name': 'Генрі Вінклер', 'birthday': datetime(1945, 10, 30)},
         {'name': 'Пітер Джексон', 'birthday': datetime(1961, 10, 31)},
     ]
-   
     try:
         get_birthdays_per_week(example)
     except WrongDataFormat as e:
         print(f"Caught the exception: {e} ")
-    except:
-        print('Caught unexpected error')
