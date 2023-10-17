@@ -24,9 +24,10 @@ def get_birthdays_per_week(users: list[dict[str,datetime]]):
 
     if not is_valide(users):
         return
+
     for user in users:
         name = user[NAME_KEY]
-        birthday = user[BIRTHDAY_KEY].date() 
+        birthday = user[BIRTHDAY_KEY].date()
         birthday_this_year = birthday.replace(year=today.year)
 
         if birthday_this_year < today:
@@ -40,8 +41,8 @@ def get_birthdays_per_week(users: list[dict[str,datetime]]):
                 birthday_this_year = birthday_this_year + timedelta(days=1)
             birthday_users[birthday_this_year.strftime("%A")].append(name)
 
-    for name, users in birthday_users.items():
-        result = ", ".join(users)
+    for name, user in birthday_users.items():
+        result = ", ".join(user)
         print(f"{name}: {result}")
 
 
@@ -51,6 +52,7 @@ def is_valide(users: list[dict[str,datetime]]) -> bool:
     """
     if not isinstance(users, list):
         raise WrongDataFormat('data must match the format: list[dict[str,datetime]]')
+
     for user in users:
         if not isinstance(user, dict):
             raise WrongDataFormat('Each user object shout be a dictionary')
@@ -60,6 +62,7 @@ def is_valide(users: list[dict[str,datetime]]) -> bool:
             raise WrongDataFormat(
                 f'Key {NAME_KEY} should be "str" and key {BIRTHDAY_KEY} should be "datetime"'
                 )
+
     return True
 
 
@@ -107,6 +110,7 @@ if __name__ == "__main__":
         {'name': 'Генрі Вінклер', 'birthday': datetime(1945, 10, 30)},
         {'name': 'Пітер Джексон', 'birthday': datetime(1961, 10, 31)},
     ]
+
     try:
         get_birthdays_per_week(example)
     except WrongDataFormat as e:
